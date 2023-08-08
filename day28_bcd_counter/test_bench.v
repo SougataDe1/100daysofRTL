@@ -1,16 +1,22 @@
 `timescale 1ns / 1ps
-module bcd_counter(q,clk,rst);
-output reg[3:0]q;
-input clk, rst;
-always @(posedge clk)
+module bcd_counter_tb();
+wire [3:0]q;
+reg clk;
+reg rst;
+ bcd_counter dut(.q(q),.clk(clk),.rst(rst));
+ initial
+ begin
+ rst=1;
+ clk=0;
+ #50
+ rst=0;
+ #400
+ rst=1;
+ #50 $finish();
+end
+always #10 clk=~clk;
+initial
 begin
-    if(rst)
-        q<=4'b0000;
-    else if(q==4'b1001)
-        begin
-        q<=4'b0000;
-        end
-    else
-    q<=q+1;
+$monitor ("T=%0t out=%b", $time, q);
 end
 endmodule
